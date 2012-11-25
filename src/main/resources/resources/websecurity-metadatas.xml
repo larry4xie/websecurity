@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<metadatas xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="websecurity-metadatas-1.0.xsd">
+	<resource urlpattern="/**" access="SYS_BASE" relation="ALL" />
+	<resource urlpattern="/user/**" access="USER_BASE, ADMIN_BASE" relation="ANY" />
+	<!-- 
+	...
+	 -->
+</metadatas>

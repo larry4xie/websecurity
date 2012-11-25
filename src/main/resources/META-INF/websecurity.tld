@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<taglib xmlns="http://java.sun.com/xml/ns/javaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-jsptaglibrary_2_1.xsd"
+	version="2.1">
+
+	<description><![CDATA[websecurity taglibs]]></description>
+	<display-name>websecurity taglibs</display-name>
+	<tlib-version>1.0</tlib-version>
+	<short-name>sec</short-name>
+	<uri>/websecurity-tag</uri>
+	<tag>
+		<description><![CDATA[granted\any-granted\all-granted\not-granted同时只能配置一个,配置多个时只有第一个有效]]></description>
+		<name>authorize</name>
+		<tag-class>cn.com.cybertech.websecurity.taglibs.AuthorizeTag</tag-class>
+		<body-content>JSP</body-content>
+
+		<attribute>
+			<description><![CDATA[web security 域]]></description>
+			<name>domain</name>
+			<required>true</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		
+		<attribute>
+			<description><![CDATA[必须拥有的一个权限]]></description>
+			<name>granted</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description><![CDATA[至少拥有其中的一个权限]]></description>
+			<name>anyGranted</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description><![CDATA[必须拥有所有权限]]></description>
+			<name>allGranted</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description><![CDATA[必须没有这个权限]]></description>
+			<name>notGranted</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		
+		<dynamic-attributes>false</dynamic-attributes>
+	</tag>
+	
+	<tag>
+		<description><![CDATA[输出UserDetails信息]]></description>
+		<name>details</name>
+		<tag-class>cn.com.cybertech.websecurity.taglibs.out.DetailsOutTag</tag-class>
+		<body-content>empty</body-content>
+
+		<attribute>
+			<description><![CDATA[web security 域]]></description>
+			<name>domain</name>
+			<required>true</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		
+		<attribute>
+			<description><![CDATA[UserDetails属性,支持链式表达式]]></description>
+			<name>property</name>
+			<required>true</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description><![CDATA[默认值]]></description>
+			<name>default</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description><![CDATA[是否xml转义(true)]]></description>
+			<name>escapeXml</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		
+		<dynamic-attributes>false</dynamic-attributes>
+	</tag>
+</taglib>

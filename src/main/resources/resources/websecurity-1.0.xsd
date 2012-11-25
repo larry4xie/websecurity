@@ -1,0 +1,217 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- edited with XMLSpy v2010 (http://www.altova.com) by xang (xang) -->
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" attributeFormDefault="unqualified">
+	<xs:element name="websecurity">
+		<xs:annotation>
+			<xs:documentation>websecurity XML 配置根元素</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:all>
+				<xs:element ref="beanfactory" minOccurs="0"/>
+				<xs:element ref="global-userdetails-helper" minOccurs="0"/>
+				<xs:element ref="global-exclude-url-patterns" minOccurs="0"/>
+				<xs:element ref="global-special-pages">
+					<xs:annotation>
+						<xs:documentation>全局的特别的页面，所有domain都会继承</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+				<xs:element ref="domains"/>
+			</xs:all>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="beanfactory">
+		<xs:annotation>
+			<xs:documentation>bean加载器</xs:documentation>
+		</xs:annotation>
+		<xs:simpleType>
+			<xs:restriction base="xs:string">
+				<xs:whiteSpace value="collapse"/>
+				<xs:minLength value="1"/>
+			</xs:restriction>
+		</xs:simpleType>
+	</xs:element>
+	<xs:element name="global-userdetails-helper">
+		<xs:annotation>
+			<xs:documentation>认证信息加载器</xs:documentation>
+		</xs:annotation>
+		<xs:simpleType>
+			<xs:restriction base="xs:string">
+				<xs:whiteSpace value="collapse"/>
+				<xs:minLength value="1"/>
+			</xs:restriction>
+		</xs:simpleType>
+	</xs:element>
+	<xs:element name="global-exclude-url-patterns">
+		<xs:annotation>
+			<xs:documentation>全局的不拦截的路径模式</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="url" maxOccurs="unbounded"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="global-special-pages">
+		<xs:annotation>
+			<xs:documentation>特别的页面，给拦截器使用</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="page" maxOccurs="unbounded"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="url">
+		<xs:annotation>
+			<xs:documentation>路径[模式]</xs:documentation>
+		</xs:annotation>
+		<xs:simpleType>
+			<xs:restriction base="xs:string">
+				<xs:whiteSpace value="collapse"/>
+				<xs:minLength value="1"/>
+			</xs:restriction>
+		</xs:simpleType>
+	</xs:element>
+	<xs:element name="page">
+		<xs:annotation>
+			<xs:documentation>页面</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:attribute name="name" use="required">
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:minLength value="1"/>
+						<xs:whiteSpace value="collapse"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:attribute>
+			<xs:attribute name="value" use="required">
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:minLength value="1"/>
+						<xs:whiteSpace value="collapse"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:attribute>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="domains">
+		<xs:annotation>
+			<xs:documentation>websecurity管理的域列表</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="domain" maxOccurs="unbounded"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="domain">
+		<xs:annotation>
+			<xs:documentation>websecurity管理的域</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:all>
+				<xs:element ref="filter-url-patterns"/>
+				<xs:element ref="exclude-url-patterns" minOccurs="0"/>
+				<xs:element ref="special-pages" minOccurs="0"/>
+				<xs:element ref="userdetails-helper" minOccurs="0"/>
+				<xs:element ref="interceptors"/>
+			</xs:all>
+			<xs:attribute name="name" use="required">
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:whiteSpace value="collapse"/>
+						<xs:minLength value="1"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:attribute>
+			<xs:attribute name="session" use="required">
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:whiteSpace value="collapse"/>
+						<xs:minLength value="1"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:attribute>
+			<xs:attribute name="short-circuit">
+				<xs:annotation>
+					<xs:documentation>true|false</xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:whiteSpace value="collapse"/>
+						<xs:enumeration value="true"/>
+						<xs:enumeration value="false"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:attribute>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="filter-url-patterns">
+		<xs:annotation>
+			<xs:documentation>域拦截的路径模式</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="url" maxOccurs="unbounded"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="exclude-url-patterns">
+		<xs:annotation>
+			<xs:documentation>域不拦截的路径模式</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="url" maxOccurs="unbounded"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="special-pages">
+		<xs:annotation>
+			<xs:documentation>特别的页面，给拦截器使用</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="page" maxOccurs="unbounded"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="userdetails-helper">
+		<xs:annotation>
+			<xs:documentation>认证信息加载器</xs:documentation>
+		</xs:annotation>
+		<xs:simpleType>
+			<xs:restriction base="xs:string">
+				<xs:whiteSpace value="collapse"/>
+				<xs:minLength value="1"/>
+			</xs:restriction>
+		</xs:simpleType>
+	</xs:element>
+	<xs:element name="interceptors">
+		<xs:annotation>
+			<xs:documentation>域的拦截器列表</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="interceptor" maxOccurs="unbounded"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="interceptor">
+		<xs:annotation>
+			<xs:documentation>拦截器</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:attribute name="bean" use="required">
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:whiteSpace value="collapse"/>
+						<xs:minLength value="1"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:attribute>
+			<xs:attribute name="order" type="xs:int"/>
+		</xs:complexType>
+	</xs:element>
+</xs:schema>

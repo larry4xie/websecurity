@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<websecurity xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="websecurity-1.0.xsd">
+	<beanfactory>cn.com.cybertech.websecurity.beanfactory.SpringBeanFactory</beanfactory><!-- 不是必填项 -->
+	
+	<global-userdetails-helper>cn.com.cybertech.websecurity.support.metadata.impl.SessionUserDetailsHelper</global-userdetails-helper><!-- 不是必填项 -->
+	<global-exclude-url-patterns><!-- 不是必填项 -->
+		<url>/common/**</url>
+	</global-exclude-url-patterns>
+	<global-special-pages> <!-- 不是必填项 -->
+		<page name="access-denied-page" value="/accessDenied.jsp" /> <!-- 不是必填项 -->
+		<page name="invalid-session-url" value="/sessionTimeout.jsp" /> <!-- 不是必填项 -->
+	</global-special-pages>
+	
+	<domains> <!-- 必填项 -->
+		<domain name="user" session="user[, other]" short-circuit="true"> <!-- 必填项 -->
+			<filter-url-patterns> <!-- 必填项 -->
+				<url>/user/**</url>
+			</filter-url-patterns>
+			
+			<exclude-url-patterns> <!-- 不是必填项 -->
+				<url>/user/common/**</url>
+			</exclude-url-patterns>
+			
+			<special-pages> <!-- 不是必填项 -->
+				<page name="access-denied-page" value="/useraccessDenied.jsp" /> <!-- 不是必填项 -->
+				<page name="invalid-session-url" value="/usersessionTimeout.jsp" /> <!-- 不是必填项 -->
+				<!-- 其他page,每一个拦截器都可以获取配置的值 -->
+			</special-pages>
+			
+			<userdetails-helper>cn.com.cybertech.websecurity.support.metadata.impl.SessionUserDetailsHelper</userdetails-helper><!-- 不是必填项 -->
+			
+			<interceptors> <!-- 必填项 -->
+				<interceptor bean="filterAuthenticationInterceptor" /> <!-- 不是必填项-->
+				<!--  
+				<interceptor bean="" order="" />
+				-->
+			</interceptors>
+		</domain>
+		
+		<domain name="admin" session="admin">
+			<filter-url-patterns>
+				<url>/admin/**</url>
+			</filter-url-patterns>
+			
+			<special-pages>
+				<page name="access-denied-page" value="/adminaccessDenied.jsp" />
+				<page name="invalid-session-url" value="/adminsessionTimeout.jsp" />
+			</special-pages>
+			
+			<interceptors>
+				<interceptor bean="filterAuthenticationInterceptor" />
+			</interceptors>
+		</domain>
+	</domains>
+</websecurity>
