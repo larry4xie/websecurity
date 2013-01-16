@@ -77,15 +77,19 @@ public class SecurityFilterChain implements Filter {
 
 	@Override
 	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
+		long _start = System.currentTimeMillis();
+		HttpServletRequest req = (HttpServletRequest) request;
+		HttpServletResponse rep = (HttpServletResponse) response;
+		SecurityServletContext context = new SecurityServletContext(req, rep);
+		
+		String url = context.getRequestUrl();
 		try {
-			HttpServletRequest req = (HttpServletRequest) request;
-			HttpServletResponse rep = (HttpServletResponse) response;
-			SecurityServletContext context = new SecurityServletContext(req, rep);
-			
-			String url = context.getRequestUrl();
 			// 排除全局的不拦截路径
 			if(securityApplicaionContext.matchExcludeUrl(url)) {
-				doFilter(request, response, chain);
+				if(logger.isDebugEnabled()) {
+					logger.debug("{} execute[exclude]: {}ms", url, System.currentTimeMillis() - _start);
+				}
+				chain.doFilter(request, response);
 				return;
 			}
 			for(SecurityDomainConfiguration config : securityApplicaionContext.getSecurityDomainConfigurations()) {
@@ -100,10 +104,16 @@ public class SecurityFilterChain implements Filter {
 					}
 				}
 			}
+			if(logger.isDebugEnabled()) {
+				logger.debug("{} execute[pass]: {}ms", url, System.currentTimeMillis() - _start);
+			}
 			chain.doFilter(request, response);
 			return;
 		} catch (SecuritySuspendException e) {
 			// Suspend chain.doFilter(request, response);
+			if(logger.isDebugEnabled()) {
+				logger.debug("{} execute[fail]: {}ms", url, System.currentTimeMillis() - _start);
+			}
 		} catch (SecurityRuntimeException e) {
 			logger.error("websecurity 运行时异常");
 			throw new ServletException("SecurityFilterChain doFilter SecurityRuntimeException", e);

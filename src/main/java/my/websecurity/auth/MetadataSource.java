@@ -1,5 +1,6 @@
 package my.websecurity.auth;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
@@ -63,6 +64,17 @@ public interface MetadataSource {
 			super();
 			this.object = object;
 			this.privileges = privileges;
+			this.relation = PrivilegesRelation.ALL;
+		}
+		
+		/**
+		 * PrivilegesRelation.ALL
+		 */
+		public Metadata(Object object, GrantedPrivilege privilege) {
+			super();
+			this.object = object;
+			this.privileges = new ArrayList<GrantedPrivilege>(1);
+			this.privileges.add(privilege);
 			this.relation = PrivilegesRelation.ALL;
 		}
 
