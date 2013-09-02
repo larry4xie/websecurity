@@ -10,7 +10,6 @@ import my.websecurity.support.metadata.impl.SessionUserDetailsHelper;
 import my.websecurity.util.UrlMatcher;
 import my.websecurity.util.impl.AntUrlPathMatcher;
 
-
 /**
  * 安全框架配置上下文
  * 
@@ -38,6 +37,11 @@ public abstract class SecurityApplicaionContext {
 	 * 全局的特别的页面
 	 */
 	private Map<String, String> globalSpecialPages;
+	
+	/** 
+	 * 默认domain名称
+	 */
+	private String defaultDomain;
 	
 	/**
 	 * 安全框架domain配置
@@ -98,6 +102,17 @@ public abstract class SecurityApplicaionContext {
 	}
 	
 	/**
+	 * 获取默认的SecurityDomainConfiguration
+	 * 
+	 * @return
+	 * @see #defaultDomain
+	 */
+	public SecurityDomainConfiguration getDefaultSecurityDomainConfiguration() {
+		return getSecurityDomainConfiguration(defaultDomain);
+	}
+
+	
+	/**
 	 * 通过名称获取SecurityDomainConfiguration
 	 * 
 	 * @param name
@@ -155,6 +170,22 @@ public abstract class SecurityApplicaionContext {
 		return globalSpecialPages;
 	}
 
+	public String getDefaultDomain() {
+		return defaultDomain;
+	}
+
+	public void setDefaultDomain(String defaultDomain) {
+		this.defaultDomain = defaultDomain;
+	}
+
+	public UrlMatcher getUrlMatcher() {
+		return urlMatcher;
+	}
+
+	public void setUrlMatcher(UrlMatcher urlMatcher) {
+		this.urlMatcher = urlMatcher;
+	}
+
 	/**
 	 * @param globalSpecialPages the globalSpecialPages to set
 	 */
@@ -169,6 +200,7 @@ public abstract class SecurityApplicaionContext {
 		sb.append("globalUserDetailsHelper = ").append(globalUserDetailsHelper.getClass().getName()).append(", ");
 		sb.append("globalExcludeUrlPatterns = ").append(globalExcludeUrlPatterns).append(", ");
 		sb.append("globalSpecialPages = ").append(globalSpecialPages).append(", ");
+		sb.append("defaultDomain = ").append(defaultDomain).append(", ");
 		sb.append("securityDomainConfigurations = ").append(securityDomainConfigurations);
 		return sb.append("]").toString();
 	}

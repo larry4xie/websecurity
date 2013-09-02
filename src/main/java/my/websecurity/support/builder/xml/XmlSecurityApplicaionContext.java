@@ -17,6 +17,7 @@ import my.websecurity.support.SecurityApplicaionContext;
 import my.websecurity.support.SecurityDomainConfiguration;
 import my.websecurity.support.metadata.UserDetailsHelper;
 
+import org.dom4j.Attribute;
 import org.dom4j.Document;
 import org.dom4j.DocumentException;
 import org.dom4j.Element;
@@ -27,7 +28,6 @@ import org.slf4j.LoggerFactory;
 import org.xml.sax.EntityResolver;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
-
 
 /**
  * 配置
@@ -221,6 +221,10 @@ public class XmlSecurityApplicaionContext extends SecurityApplicaionContext {
 	
 	private void buildSecurityDomainConfigurations(Element root) throws SecurityConfigurationException {
 		try {
+			// 生成domains
+			Attribute defaultAttribute = (Attribute) root.selectSingleNode("./domains/@default");
+			String defaultDomain = defaultAttribute != null ? defaultAttribute.getValue() : null;
+			
 			// 生成domain(SecurityDomainConfiguration)
 			List<SecurityDomainConfiguration> securityDomainConfigurations = new ArrayList<SecurityDomainConfiguration>(); // 安全框架domain配置
 			List<?> nodes = root.selectNodes("./domains/domain");
@@ -281,8 +285,10 @@ public class XmlSecurityApplicaionContext extends SecurityApplicaionContext {
 				domainConfig.setInterceptors(new ArrayList<Interceptor>(interceptors));
 				securityDomainConfigurations.add(domainConfig);
 			}
-			
-			this.setSecurityDomainConfigurations(securityDomainConfigurations); // securityDomainConfigurations
+			// set default domain
+			this.setDefaultDomain(defaultDomain != null ? defaultDomain : securityDomainConfigurations.get(0).getName());
+			// set securityDomainConfigurations
+			this.setSecurityDomainConfigurations(securityDomainConfigurations);
 		} catch (Exception e) {
 			throw new SecurityConfigurationException("init config domains fail...", e);
 		}

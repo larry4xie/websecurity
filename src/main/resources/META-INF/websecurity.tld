@@ -17,7 +17,7 @@
 		<attribute>
 			<description><![CDATA[web security 域]]></description>
 			<name>domain</name>
-			<required>true</required>
+			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>
 		
@@ -58,7 +58,7 @@
 		<attribute>
 			<description><![CDATA[web security 域]]></description>
 			<name>domain</name>
-			<required>true</required>
+			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>
 		

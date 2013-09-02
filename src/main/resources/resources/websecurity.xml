@@ -11,7 +11,8 @@
 		<page name="invalid-session-url" value="/sessionTimeout.jsp" /> <!-- 不是必填项 -->
 	</global-special-pages>
 	
-	<domains> <!-- 必填项 -->
+	<domains default="user"> <!-- 必填项 -->
+		<!-- default默认是第一个domain name -->
 		<domain name="user" session="user[, other]" short-circuit="true"> <!-- 必填项 -->
 			<filter-url-patterns> <!-- 必填项 -->
 				<url>/user/**</url>

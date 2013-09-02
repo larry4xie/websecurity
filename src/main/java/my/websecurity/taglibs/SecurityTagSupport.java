@@ -12,7 +12,6 @@ import my.websecurity.support.SecurityDomainConfiguration;
 import my.websecurity.support.SecurityServletContext;
 import my.websecurity.support.metadata.UserDetails;
 
-
 /**
  * webSecurity系统标签的支持类
  * 
@@ -46,7 +45,8 @@ public class SecurityTagSupport extends TagSupport {
 		ServletResponse response = pageContext.getResponse();
 		if(request instanceof HttpServletRequest) {
 			SecurityApplicaionContext context = SecurityApplicaionContextHolder.getSecurityApplicaionContext();
-			SecurityDomainConfiguration configuration = context.getSecurityDomainConfiguration(domain);
+			SecurityDomainConfiguration configuration = 
+				isEmpty(domain) ? context.getDefaultSecurityDomainConfiguration() : context.getSecurityDomainConfiguration(domain);
 			return configuration != null ? context.getGlobalUserDetailsHelper().loadUserDetails(new SecurityServletContext((HttpServletRequest)request, (HttpServletResponse)response), configuration) : null;
 		} else {
 			return null;
@@ -63,7 +63,7 @@ public class SecurityTagSupport extends TagSupport {
 		ServletRequest request = pageContext.getRequest();
 		if(request instanceof HttpServletRequest) {
 			SecurityApplicaionContext context = SecurityApplicaionContextHolder.getSecurityApplicaionContext();
-			return context.getSecurityDomainConfiguration(domain);
+			return isEmpty(domain) ? context.getDefaultSecurityDomainConfiguration() : context.getSecurityDomainConfiguration(domain);
 		} else {
 			return null;
 		}
