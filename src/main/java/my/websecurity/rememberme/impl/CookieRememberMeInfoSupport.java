@@ -4,6 +4,7 @@ import javax.servlet.http.Cookie;
 
 import my.websecurity.exception.SecurityRuntimeException;
 import my.websecurity.rememberme.RememberMeInfo;
+import my.websecurity.rememberme.RememberMeService;
 import my.websecurity.support.SecurityServletContext;
 import my.websecurity.support.metadata.UserDetails;
 import my.websecurity.support.metadata.impl.SimpleUserDetails;
@@ -49,7 +50,15 @@ public abstract class CookieRememberMeInfoSupport implements RememberMeInfo {
 			if(null != rememberMeCookieValue && rememberMeCookieValue.trim().length() > 0) {
 				String one = new String(Base64Utils.decode(rememberMeCookieValue.getBytes()));
 				String[] parts = one.split(":");
+				// parts
+				// des:username, timeseq, sha1:usernaem+timeseq+password
 				if(parts.length == 3 && parts[0].length() > 0 && parts[1].length() > 0 && parts[2].length() > 0) {
+					long timeSeq = -1L;
+					try { timeSeq = Long.parseLong(parts[1]); } catch (NumberFormatException e) {}
+					if (timeSeq == -1L || System.currentTimeMillis() - timeSeq > maxAge) {
+						// 超时失效
+						return null;
+					}
 					String username = EncryptUtils.DESDecrypt(parts[0], KEY);
 					String password = queryPassword(username);
 					if(null != password && password.length() > 0) {
@@ -63,7 +72,7 @@ public abstract class CookieRememberMeInfoSupport implements RememberMeInfo {
 			
 			return null;
 		} catch (Exception e) {
-			logger.error("loadRememberMeDetails", e);
+			logger.warn("loadRememberMeDetails", e);
 			throw new SecurityRuntimeException(e);
 		}
 	}
@@ -73,11 +82,13 @@ public abstract class CookieRememberMeInfoSupport implements RememberMeInfo {
 		try {
 			long timeSeq = System.currentTimeMillis();
 			
+			// parts
+			// des:username, timeseq, sha1:usernaem+timeseq+password
 			String str = EncryptUtils.DESEncrypt(userDetails.getName(), KEY) + ":" + timeSeq + ":" + EncryptUtils.SHA1Encode(userDetails.getName() + ":" + timeSeq + ":" + userDetails.getPassword());
 			String rememberMeString = new String(Base64Utils.encode(str.getBytes()));
 			rememberMeString = rememberMeString.replaceAll("\\s", ""); // 76
 			Cookie cookie = new Cookie(rememberMeKey, rememberMeString);
-			cookie.setMaxAge(maxAge > 0 ? maxAge: 365 * 24 * 60 * 60);
+			cookie.setMaxAge(maxAge > 0 ? maxAge: RememberMeService.REMEMBERME_MAX_AGE);
 			cookie.setPath(context.getRequest().getContextPath());
 			context.getResponse().addCookie(cookie);
 		} catch (Exception e) {

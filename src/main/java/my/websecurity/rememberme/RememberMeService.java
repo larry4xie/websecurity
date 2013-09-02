@@ -13,9 +13,14 @@ import my.websecurity.support.metadata.UserDetails;
  *
  */
 public abstract class RememberMeService {
+	/**
+	 * 默认maxAge
+	 */
+	public static final int REMEMBERME_MAX_AGE = 365 * 24 * 60 * 60; // 一年
+	
 	private String rememberMeKey = "WEBSECURITY_REMEMBER_ME";
 	
-	private int maxAge = 365 * 24 * 60 * 60; // 一年
+	private int maxAge = REMEMBERME_MAX_AGE;
 	
 	private RememberMeInfo rememberMeInfo;
 	
