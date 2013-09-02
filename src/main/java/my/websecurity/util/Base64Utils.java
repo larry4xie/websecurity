@@ -648,8 +648,9 @@ public final class Base64Utils {
 
 
 class InvalidBase64CharacterException extends IllegalArgumentException {
+	private static final long serialVersionUID = -6511686312765626813L;
 
-    InvalidBase64CharacterException(String message) {
+	InvalidBase64CharacterException(String message) {
         super(message);
     }
 }

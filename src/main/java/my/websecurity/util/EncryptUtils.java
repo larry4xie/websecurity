@@ -48,8 +48,6 @@ public class EncryptUtils {
 	 */
 	private final static String DEFAULT_CHARSET = "UTF-8";
 	
-	/** 加密算法BASE64 */
-	public final static String ALGORITHM_BASE64 = "BASE64";
 	/** 加密算法DES */
 	public final static String ALGORITHM_DES = "DES";
 	
