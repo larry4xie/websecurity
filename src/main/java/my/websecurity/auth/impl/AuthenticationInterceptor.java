@@ -3,6 +3,7 @@ package my.websecurity.auth.impl;
 import java.io.IOException;
 import java.util.List;
 
+import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -32,6 +33,7 @@ import org.slf4j.LoggerFactory;
 public class AuthenticationInterceptor extends AbstractAuthenticationInterceptor {
 	private static final Logger logger = LoggerFactory.getLogger(AuthenticationInterceptor.class);
 	
+	private static final String TO_URL = "toUrl";
 	public static final String INVALID_SESSION_URL = "invalid-session-url"; // 没有登录或者session失效的转向页面
 	public static final int INVALID_SESSION_SC = HttpServletResponse.SC_UNAUTHORIZED; // 没有登录或者session失效的response status 编码
 	
@@ -50,8 +52,19 @@ public class AuthenticationInterceptor extends AbstractAuthenticationInterceptor
 		try {
 			if(null == userDetails){
 				// 还没有登录或者session失效
-				UrlUtils.redirect2Page(req, rep, configuration.getSpecialPages().get(INVALID_SESSION_URL) + "?toUrl=" + req.getRequestURL(), INVALID_SESSION_SC);
-				if(callback != null) { // callback
+				// 获取没有登录的转发页面
+				String invalidSessionUrl = configuration.getSpecialPages().get(INVALID_SESSION_URL);
+				if(null != invalidSessionUrl && invalidSessionUrl.length() > 0) {
+					StringBuffer toUrl = new StringBuffer(invalidSessionUrl)
+							.append('?').append(TO_URL).append('=')
+							.append(context.getFullRequestUrl());
+					UrlUtils.forward2Page(req, rep, toUrl.toString(), INVALID_SESSION_SC);
+				} else {
+					rep.sendError(INVALID_SESSION_SC, "request requires HTTP authentication");
+				}
+				
+				// callback
+				if(callback != null) {
 					callback.onNullUserDetails(context, configuration);
 				}
 				throw new SecuritySuspendException("还没有登录");
@@ -64,13 +77,24 @@ public class AuthenticationInterceptor extends AbstractAuthenticationInterceptor
 				if(null == metadatas || metadatas.size() < 1 || accessDecisionManager.decide(userDetails, url, metadatas)) {
 					// 不需要权限或者权限验证通过
 					interceptorChain.doFilter(context, userDetails, configuration);
-					if(callback != null) { // callback
+					// callback
+					if(callback != null) {
 						callback.onPassAuthentication(context, configuration, userDetails);
 					}
 				} else {
 					// 权限验证不通过
-					UrlUtils.redirect2Page(req, rep, configuration.getSpecialPages().get(ACCESS_DENIED_PAGE) + "?toUrl=" + req.getRequestURL(), ACCESS_DENIED_SC);
-					if(callback != null) { // callback
+					String accessDeniedPage = configuration.getSpecialPages().get(ACCESS_DENIED_PAGE);
+					if (null != accessDeniedPage && accessDeniedPage.length() > 0) {
+						StringBuffer toUrl = new StringBuffer(accessDeniedPage)
+								.append('?').append(TO_URL).append('=')
+								.append(context.getFullRequestUrl());
+						UrlUtils.forward2Page(req, rep, toUrl.toString(), ACCESS_DENIED_SC);
+					} else {
+						rep.sendError(ACCESS_DENIED_SC, "server understood the request but refused to fulfill it");
+					}
+					
+					// callback
+					if(callback != null) {
 						callback.onNotPassAuthentication(context, configuration, userDetails);
 					}
 					throw new SecuritySuspendException("权限验证不通过");
@@ -80,8 +104,11 @@ public class AuthenticationInterceptor extends AbstractAuthenticationInterceptor
 				throw new SecurityRuntimeException("不支持的权限资源类型,请查看配置" + url.getClass());
 			} 
 		} catch(IOException e) {
-			logger.error("redirect2Page IO exception", e);
-			throw new SecurityRuntimeException("redirect2Page IO exception", e);
+			logger.warn("sendError IO exception", e);
+			throw new SecurityRuntimeException("sendError IO exception", e);
+		} catch (ServletException e) {
+			logger.warn("redirect2Page Servlet exception", e);
+			throw new SecurityRuntimeException("redirect2Page Servlet exception", e);
 		}
 	}
 

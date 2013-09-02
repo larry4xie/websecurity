@@ -5,7 +5,6 @@ import javax.servlet.http.HttpServletResponse;
 
 import my.websecurity.util.UrlUtils;
 
-
 /**
  * @author xiegang
  * @since 2012-7-3
@@ -27,6 +26,12 @@ public class SecurityServletContext {
 	 * 比如：/index.jsp
 	 */
 	private String requestUrl;
+	
+	/**
+	 * 请求的路径包含queryString
+	 * 比如：/index.jsp
+	 */
+	private String fullRequestUrl;
 	
 	public SecurityServletContext(HttpServletRequest req) {
 		this.request = req;
@@ -56,6 +61,24 @@ public class SecurityServletContext {
 	}
 
 	/**
+	 * get requestUrl contains queryString
+	 * 
+	 * @return the requestUrl
+	 */
+	public String getFullRequestUrl() {
+		if(null == fullRequestUrl && null != request) {
+			synchronized (this) {
+				if(null == fullRequestUrl) {
+					this.fullRequestUrl = UrlUtils.buildFullRequestUrl(request, true);
+				}
+			}
+		}
+		return fullRequestUrl;
+	}
+	
+	/**
+	 * get requestUrl
+	 * 
 	 * @return the requestUrl
 	 */
 	public String getRequestUrl() {
