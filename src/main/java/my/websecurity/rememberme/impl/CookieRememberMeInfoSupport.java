@@ -1,5 +1,8 @@
 package my.websecurity.rememberme.impl;
 
+import java.net.URLDecoder;
+import java.net.URLEncoder;
+
 import javax.servlet.http.Cookie;
 
 import my.websecurity.exception.SecurityRuntimeException;
@@ -48,10 +51,10 @@ public abstract class CookieRememberMeInfoSupport implements RememberMeInfo {
 				}
 			}
 			if(null != rememberMeCookieValue && rememberMeCookieValue.trim().length() > 0) {
-				String one = new String(Base64Utils.decode(rememberMeCookieValue.getBytes()));
+				String one = URLDecoder.decode(new String(Base64Utils.decode(rememberMeCookieValue.getBytes())), "UTF-8");
 				String[] parts = one.split(":");
 				// parts
-				// des:username, timeseq, sha1:usernaem+timeseq+password
+				// des:username, timeseq, md5:usernaem+timeseq+password
 				if(parts.length == 3 && parts[0].length() > 0 && parts[1].length() > 0 && parts[2].length() > 0) {
 					long timeSeq = -1L;
 					try { timeSeq = Long.parseLong(parts[1]); } catch (NumberFormatException e) {}
@@ -62,7 +65,7 @@ public abstract class CookieRememberMeInfoSupport implements RememberMeInfo {
 					String username = EncryptUtils.DESDecrypt(parts[0], KEY);
 					String password = queryPassword(username);
 					if(null != password && password.length() > 0) {
-						if(EncryptUtils.SHA1Encode(username + ":" + parts[1] + ":" + password).equals(parts[2])) {
+						if(EncryptUtils.MD5Encode(username + ":" + parts[1] + ":" + password).equals(parts[2])) {
 							// success
 							return new SimpleUserDetails(username, password);
 						}
@@ -83,9 +86,9 @@ public abstract class CookieRememberMeInfoSupport implements RememberMeInfo {
 			long timeSeq = System.currentTimeMillis();
 			
 			// parts
-			// des:username, timeseq, sha1:usernaem+timeseq+password
-			String str = EncryptUtils.DESEncrypt(userDetails.getName(), KEY) + ":" + timeSeq + ":" + EncryptUtils.SHA1Encode(userDetails.getName() + ":" + timeSeq + ":" + userDetails.getPassword());
-			String rememberMeString = new String(Base64Utils.encode(str.getBytes()));
+			// des:username, timeseq, md5:usernaem+timeseq+password
+			String str = EncryptUtils.DESEncrypt(userDetails.getName(), KEY) + ":" + timeSeq + ":" + EncryptUtils.MD5Encode(userDetails.getName() + ":" + timeSeq + ":" + userDetails.getPassword());
+			String rememberMeString = URLEncoder.encode(new String(Base64Utils.encode(str.getBytes())), "UTF-8");
 			rememberMeString = rememberMeString.replaceAll("\\s", ""); // 76
 			Cookie cookie = new Cookie(rememberMeKey, rememberMeString);
 			cookie.setMaxAge(maxAge > 0 ? maxAge: RememberMeService.REMEMBERME_MAX_AGE);
