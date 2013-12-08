@@ -33,7 +33,7 @@ import org.slf4j.LoggerFactory;
 public class AuthenticationInterceptor extends AbstractAuthenticationInterceptor {
 	private static final Logger logger = LoggerFactory.getLogger(AuthenticationInterceptor.class);
 	
-	private static final String TO_URL = "toUrl";
+	public static final String TO_URL = "to_url";
 	public static final String INVALID_SESSION_URL = "invalid-session-url"; // 没有登录或者session失效的转向页面
 	public static final int INVALID_SESSION_SC = HttpServletResponse.SC_UNAUTHORIZED; // 没有登录或者session失效的response status 编码
 	
