@@ -3,7 +3,6 @@ package my.websecurity.auth.impl;
 import java.io.IOException;
 import java.util.List;
 
-import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -58,7 +57,7 @@ public class AuthenticationInterceptor extends AbstractAuthenticationInterceptor
 					StringBuffer toUrl = new StringBuffer(invalidSessionUrl)
 							.append('?').append(TO_URL).append('=')
 							.append(context.getFullRequestUrl());
-					UrlUtils.forward2Page(req, rep, toUrl.toString(), INVALID_SESSION_SC);
+					UrlUtils.redirect2Page(req, rep, toUrl.toString(), INVALID_SESSION_SC);
 				} else {
 					rep.sendError(INVALID_SESSION_SC, "request requires HTTP authentication");
 				}
@@ -88,7 +87,7 @@ public class AuthenticationInterceptor extends AbstractAuthenticationInterceptor
 						StringBuffer toUrl = new StringBuffer(accessDeniedPage)
 								.append('?').append(TO_URL).append('=')
 								.append(context.getFullRequestUrl());
-						UrlUtils.forward2Page(req, rep, toUrl.toString(), ACCESS_DENIED_SC);
+						UrlUtils.redirect2Page(req, rep, toUrl.toString(), ACCESS_DENIED_SC);
 					} else {
 						rep.sendError(ACCESS_DENIED_SC, "server understood the request but refused to fulfill it");
 					}
@@ -106,9 +105,6 @@ public class AuthenticationInterceptor extends AbstractAuthenticationInterceptor
 		} catch(IOException e) {
 			logger.warn("sendError IO exception", e);
 			throw new SecurityRuntimeException("sendError IO exception", e);
-		} catch (ServletException e) {
-			logger.warn("redirect2Page Servlet exception", e);
-			throw new SecurityRuntimeException("redirect2Page Servlet exception", e);
 		}
 	}
 
