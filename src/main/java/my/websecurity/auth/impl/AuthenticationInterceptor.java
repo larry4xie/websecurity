@@ -1,6 +1,7 @@
 package my.websecurity.auth.impl;
 
 import java.io.IOException;
+import java.net.URLEncoder;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -56,7 +57,7 @@ public class AuthenticationInterceptor extends AbstractAuthenticationInterceptor
 				if(null != invalidSessionUrl && invalidSessionUrl.length() > 0) {
 					StringBuffer toUrl = new StringBuffer(invalidSessionUrl)
 							.append('?').append(TO_URL).append('=')
-							.append(context.getFullRequestUrl());
+							.append(URLEncoder.encode(context.getFullRequestUrl(), "UTF-8"));
 					UrlUtils.redirect2Page(req, rep, toUrl.toString(), INVALID_SESSION_SC);
 				} else {
 					rep.sendError(INVALID_SESSION_SC, "request requires HTTP authentication");
@@ -86,7 +87,7 @@ public class AuthenticationInterceptor extends AbstractAuthenticationInterceptor
 					if (null != accessDeniedPage && accessDeniedPage.length() > 0) {
 						StringBuffer toUrl = new StringBuffer(accessDeniedPage)
 								.append('?').append(TO_URL).append('=')
-								.append(context.getFullRequestUrl());
+								.append(URLEncoder.encode(context.getFullRequestUrl(), "UTF-8"));
 						UrlUtils.redirect2Page(req, rep, toUrl.toString(), ACCESS_DENIED_SC);
 					} else {
 						rep.sendError(ACCESS_DENIED_SC, "server understood the request but refused to fulfill it");
@@ -103,8 +104,8 @@ public class AuthenticationInterceptor extends AbstractAuthenticationInterceptor
 				throw new SecurityRuntimeException("不支持的权限资源类型,请查看配置" + url.getClass());
 			} 
 		} catch(IOException e) {
-			logger.warn("sendError IO exception", e);
-			throw new SecurityRuntimeException("sendError IO exception", e);
+			logger.warn("AuthenticationInterceptor IO exception", e);
+			throw new SecurityRuntimeException("AuthenticationInterceptor IO exception", e);
 		}
 	}
 
