@@ -65,7 +65,7 @@ public class AuthorizeTag extends SecurityTagSupport {
 	private boolean authorize(UserDetails userDetails) {
 		Collection<GrantedPrivilege> privileges = userDetails.getAllPrivileges();
 		if(privileges == null || privileges.size() < 1) {
-			return false;
+			return isEmpty(notGranted) ? false : true;
 		}
 		if(!isEmpty(granted)) {
 			// granted
