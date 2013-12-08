@@ -11,9 +11,9 @@ import java.util.Map.Entry;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
+import my.websecurity.WebSecurity;
 import my.websecurity.auth.AbstractStringMetadataSource;
 import my.websecurity.exception.SecurityRuntimeException;
-import my.websecurity.support.SecurityApplicaionContextHolder;
 import my.websecurity.support.metadata.GrantedPrivilege;
 import my.websecurity.support.metadata.impl.GrantedPrivilegeImpl;
 
@@ -77,7 +77,7 @@ public class SimpleMetadataSource extends AbstractStringMetadataSource {
 	public void initMetadata() throws SecurityRuntimeException {
 		try {
 			logger.info("init simple metadata config form: " + metadataFileLocation + "...");
-			InputStream config = SecurityApplicaionContextHolder.getServletContext().getResourceAsStream(metadataFileLocation);
+			InputStream config = WebSecurity.getServletContext().getResourceAsStream(metadataFileLocation);
 			SAXReader reader = new SAXReader(true);
 			logger.debug("验证 websecurity-metadatas Schema ...");
 			EntityResolver resolver = new EntityResolver() {

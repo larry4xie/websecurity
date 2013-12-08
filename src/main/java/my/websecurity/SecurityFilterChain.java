@@ -15,7 +15,6 @@ import javax.servlet.http.HttpServletResponse;
 import my.websecurity.exception.SecurityRuntimeException;
 import my.websecurity.exception.SecuritySuspendException;
 import my.websecurity.support.SecurityApplicaionContext;
-import my.websecurity.support.SecurityApplicaionContextHolder;
 import my.websecurity.support.SecurityDomainConfiguration;
 import my.websecurity.support.SecurityServletContext;
 import my.websecurity.support.builder.xml.XmlSecurityApplicaionContext;
@@ -60,12 +59,12 @@ public class SecurityFilterChain implements Filter {
 		logger.info("websecurity 使用配置：" + this.configPath);
 		// getServletContext
 		this.servletContext = config.getServletContext();
-		SecurityApplicaionContextHolder.setServletContext(servletContext);
+		WebSecurity.setServletContext(servletContext);
 		// parse deploy to init
 		try {
 			logger.info("websecurity 初始化配置文件...");
 			this.securityApplicaionContext = new XmlSecurityApplicaionContext(servletContext, configPath);
-			SecurityApplicaionContextHolder.setSecurityApplicaionContext(securityApplicaionContext);
+			WebSecurity.setSecurityApplicaionContext(securityApplicaionContext);
 			if(logger.isInfoEnabled()) {
 				logger.info("websecurity 初始化配置成功：" + this.securityApplicaionContext);
 			}

@@ -1,15 +1,17 @@
-package my.websecurity.support;
+package my.websecurity;
 
 import javax.servlet.ServletContext;
 
+import my.websecurity.support.SecurityApplicaionContext;
+
 /**
- * SecurityApplicaionContext 持有器
+ * WebSecurity
  * 
  * @author xiegang
  * @since 2011-12-19
  *
  */
-public class SecurityApplicaionContextHolder {
+public class WebSecurity {
 	private static ServletContext servletContext;
 	private static SecurityApplicaionContext securityApplicaionContext;
 
@@ -24,7 +26,7 @@ public class SecurityApplicaionContextHolder {
 	 * @param servletContext the servletContext to set
 	 */
 	public static void setServletContext(ServletContext servletContext) {
-		SecurityApplicaionContextHolder.servletContext = servletContext;
+		WebSecurity.servletContext = servletContext;
 	}
 
 	/**
@@ -38,7 +40,7 @@ public class SecurityApplicaionContextHolder {
 	 * @param securityApplicaionContext the securityApplicaionContext to set
 	 */
 	public static void setSecurityApplicaionContext(SecurityApplicaionContext securityApplicaionContext) {
-		SecurityApplicaionContextHolder.securityApplicaionContext = securityApplicaionContext;
+		WebSecurity.securityApplicaionContext = securityApplicaionContext;
 	}
 	
 	

@@ -6,8 +6,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.jsp.tagext.TagSupport;
 
+import my.websecurity.WebSecurity;
 import my.websecurity.support.SecurityApplicaionContext;
-import my.websecurity.support.SecurityApplicaionContextHolder;
 import my.websecurity.support.SecurityDomainConfiguration;
 import my.websecurity.support.SecurityServletContext;
 import my.websecurity.support.metadata.UserDetails;
@@ -44,7 +44,7 @@ public class SecurityTagSupport extends TagSupport {
 		ServletRequest request = pageContext.getRequest();
 		ServletResponse response = pageContext.getResponse();
 		if(request instanceof HttpServletRequest) {
-			SecurityApplicaionContext context = SecurityApplicaionContextHolder.getSecurityApplicaionContext();
+			SecurityApplicaionContext context = WebSecurity.getSecurityApplicaionContext();
 			SecurityDomainConfiguration configuration = 
 				isEmpty(domain) ? context.getDefaultSecurityDomainConfiguration() : context.getSecurityDomainConfiguration(domain);
 			return configuration != null ? context.getGlobalUserDetailsHelper().loadUserDetails(new SecurityServletContext((HttpServletRequest)request, (HttpServletResponse)response), configuration) : null;
@@ -62,7 +62,7 @@ public class SecurityTagSupport extends TagSupport {
 	protected SecurityDomainConfiguration getSecurityDomainConfiguration() {
 		ServletRequest request = pageContext.getRequest();
 		if(request instanceof HttpServletRequest) {
-			SecurityApplicaionContext context = SecurityApplicaionContextHolder.getSecurityApplicaionContext();
+			SecurityApplicaionContext context = WebSecurity.getSecurityApplicaionContext();
 			return isEmpty(domain) ? context.getDefaultSecurityDomainConfiguration() : context.getSecurityDomainConfiguration(domain);
 		} else {
 			return null;
