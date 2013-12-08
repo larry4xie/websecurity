@@ -20,7 +20,7 @@ import my.websecurity.support.metadata.UserDetails;
  * @since 2011-12-19
  *
  */
-public class WebSecurity {
+public final class WebSecurity {
 	private static ServletContext servletContext;
 	private static SecurityApplicaionContext securityApplicaionContext;
 
@@ -33,7 +33,7 @@ public class WebSecurity {
 	 * @param domain
 	 * @return 可能为null
 	 */
-	public UserDetails getUserDetails(HttpServletRequest request, HttpServletResponse response, String domain) {
+	public final static UserDetails getUserDetails(HttpServletRequest request, HttpServletResponse response, String domain) {
 		SecurityApplicaionContext context = WebSecurity.getSecurityApplicaionContext();
 		SecurityDomainConfiguration configuration = 
 			isEmpty(domain) ? context.getDefaultSecurityDomainConfiguration() : 
@@ -47,8 +47,8 @@ public class WebSecurity {
 	 * @param response
 	 * @return 可能为null
 	 */
-	public UserDetails getUserDetails(HttpServletRequest request, HttpServletResponse response) {
-		return this.getUserDetails(request, response, null);
+	public final static UserDetails getUserDetails(HttpServletRequest request, HttpServletResponse response) {
+		return getUserDetails(request, response, null);
 	}
 	
 	/**
@@ -58,7 +58,7 @@ public class WebSecurity {
 	 * @param permission
 	 * @return
 	 */
-	public boolean isGranted(UserDetails userDetails, String permission) {
+	public final static boolean isGranted(UserDetails userDetails, String permission) {
 		Collection<GrantedPrivilege> privileges = userDetails.getAllPrivileges();
 		if(privileges == null || privileges.size() < 1) {
 			return false;
@@ -78,7 +78,7 @@ public class WebSecurity {
 	 * @param permission
 	 * @return
 	 */
-	public boolean notGranted(UserDetails userDetails, String permission) {
+	public final static boolean notGranted(UserDetails userDetails, String permission) {
 		Collection<GrantedPrivilege> privileges = userDetails.getAllPrivileges();
 		if(privileges == null || privileges.size() < 1) {
 			return true;
@@ -98,7 +98,7 @@ public class WebSecurity {
 	 * @param permissions 逗号分隔
 	 * @return
 	 */
-	public boolean isAnyGranted(UserDetails userDetails, String permissions) {
+	public final static boolean isAnyGranted(UserDetails userDetails, String permissions) {
 		Collection<GrantedPrivilege> privileges = userDetails.getAllPrivileges();
 		if(privileges == null || privileges.size() < 1) {
 			return false;
@@ -122,7 +122,7 @@ public class WebSecurity {
 	 * @param permissions 逗号分隔
 	 * @return
 	 */
-	public boolean isAllGranted(UserDetails userDetails, String permissions) {
+	public final static boolean isAllGranted(UserDetails userDetails, String permissions) {
 		Collection<GrantedPrivilege> privileges = userDetails.getAllPrivileges();
 		if(privileges == null || privileges.size() < 1) {
 			return false;
@@ -146,28 +146,28 @@ public class WebSecurity {
 	/**
 	 * @return the servletContext
 	 */
-	public static ServletContext getServletContext() {
+	public final static ServletContext getServletContext() {
 		return servletContext;
 	}
 
 	/**
 	 * @param servletContext the servletContext to set
 	 */
-	public static void setServletContext(ServletContext servletContext) {
+	public final static void setServletContext(ServletContext servletContext) {
 		WebSecurity.servletContext = servletContext;
 	}
 
 	/**
 	 * @return the securityApplicaionContext
 	 */
-	public static SecurityApplicaionContext getSecurityApplicaionContext() {
+	public final static SecurityApplicaionContext getSecurityApplicaionContext() {
 		return securityApplicaionContext;
 	}
 
 	/**
 	 * @param securityApplicaionContext the securityApplicaionContext to set
 	 */
-	public static void setSecurityApplicaionContext(SecurityApplicaionContext securityApplicaionContext) {
+	public final static void setSecurityApplicaionContext(SecurityApplicaionContext securityApplicaionContext) {
 		WebSecurity.securityApplicaionContext = securityApplicaionContext;
 	}
 	
@@ -179,7 +179,7 @@ public class WebSecurity {
 	 * @param granted
 	 * @return
 	 */
-	private boolean comparePrivilege(GrantedPrivilege privilege, String granted) {
+	private final static boolean comparePrivilege(GrantedPrivilege privilege, String granted) {
 		return privilege != null ? privilege.getPrivilege().equals(granted) : false;
 	}
 	
@@ -189,7 +189,7 @@ public class WebSecurity {
 	 * @param granted
 	 * @return
 	 */
-	private String[] getGranteds(String granted) {
+	private final static String[] getGranteds(String granted) {
 		String[] granteds = granted != null ? granted.split(",") : new String[]{};
 		for(int i = granteds.length - 1; i >= 0; i--) {
 			granteds[i] = granteds[i].trim();
@@ -197,7 +197,7 @@ public class WebSecurity {
 		return granteds;
 	}
 	
-	private boolean isEmpty(CharSequence cs) {
+	private final static boolean isEmpty(CharSequence cs) {
 		return cs == null || cs.length() == 0;
 	}
 }
