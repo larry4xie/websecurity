@@ -51,7 +51,7 @@ public abstract class CookieRememberMeInfoSupport implements RememberMeInfo {
 				}
 			}
 			if(null != rememberMeCookieValue && rememberMeCookieValue.trim().length() > 0) {
-				String one = URLDecoder.decode(new String(Base64Utils.decode(rememberMeCookieValue.getBytes())), "UTF-8");
+				String one = new String(Base64Utils.decode(URLDecoder.decode(rememberMeCookieValue, "UTF-8").getBytes()));
 				String[] parts = one.split(":");
 				// parts
 				// des:username, timeseq, md5:usernaem+timeseq+password
