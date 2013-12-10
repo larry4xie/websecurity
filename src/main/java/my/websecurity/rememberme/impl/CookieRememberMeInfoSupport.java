@@ -58,7 +58,7 @@ public abstract class CookieRememberMeInfoSupport implements RememberMeInfo {
 				if(parts.length == 3 && parts[0].length() > 0 && parts[1].length() > 0 && parts[2].length() > 0) {
 					long timeSeq = -1L;
 					try { timeSeq = Long.parseLong(parts[1]); } catch (NumberFormatException e) {}
-					if (timeSeq == -1L || System.currentTimeMillis() - timeSeq > maxAge) {
+					if (timeSeq == -1L || System.currentTimeMillis() - timeSeq > (maxAge * 1000)) {
 						// 超时失效
 						return null;
 					}
