@@ -11,7 +11,7 @@
 	<tag>
 		<description><![CDATA[granted\any-granted\all-granted\not-granted同时只能配置一个,配置多个时只有第一个有效]]></description>
 		<name>authorize</name>
-		<tag-class>cn.com.cybertech.websecurity.taglibs.AuthorizeTag</tag-class>
+		<tag-class>my.websecurity.taglibs.AuthorizeTag</tag-class>
 		<body-content>JSP</body-content>
 
 		<attribute>
