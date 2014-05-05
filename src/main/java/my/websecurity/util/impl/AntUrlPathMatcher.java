@@ -13,24 +13,31 @@ import my.websecurity.util.impl.support.PathMatcher;
  * 
  */
 public class AntUrlPathMatcher implements UrlMatcher {
-	/**
-	 * 默认区分大小写
-	 */
-	private boolean requiresLowerCaseUrl = false;
+	/** 区分大小写 */
+	private boolean requiresLowerCaseUrl;
+	
+	/** If enabled a method mapped to "/users" also matches to "/users/" */
+	private boolean useTrailingSlashMatch;
 	
 	private PathMatcher pathMatcher = new AntPathMatcher();
 	
 	public AntUrlPathMatcher() {
-        this(false);
-    }
+		this(false, true);
+	}
 
-    public AntUrlPathMatcher(boolean requiresLowerCaseUrl) {
-        this.requiresLowerCaseUrl = requiresLowerCaseUrl;
-    }
+	public AntUrlPathMatcher(boolean requiresLowerCaseUrl, boolean useTrailingSlashMatch) {
+		this.requiresLowerCaseUrl = requiresLowerCaseUrl;
+		this.useTrailingSlashMatch = useTrailingSlashMatch;
+	}
 	
 	@Override
 	public Object compile(String path) {
-		return requiresLowerCaseUrl ? path.toLowerCase() : path;
+		path = requiresLowerCaseUrl ? path.toLowerCase() : path;
+
+		// useTrailingSlashMatch
+		path = (useTrailingSlashMatch && path.length() >= 1 && path.charAt(path.length() - 1) =='/')
+				? path.substring(0, path.length() - 1): path;
+		return path;
 	}
 
 	@Override
@@ -38,6 +45,10 @@ public class AntUrlPathMatcher implements UrlMatcher {
 		if ("/**".equals(path) || "**".equals(path)) {
 			return true;
 		}
+		
+		// useTrailingSlashMatch
+		url = (useTrailingSlashMatch && url.length() >= 1 && url.charAt(url.length() - 1) =='/')
+				? url.substring(0, url.length() - 1): url;
 		return pathMatcher.match((String)path, url);
 	}
 
@@ -52,6 +63,6 @@ public class AntUrlPathMatcher implements UrlMatcher {
 	}
 	
 	public void setRequiresLowerCaseUrl(boolean requiresLowerCaseUrl) {
-        this.requiresLowerCaseUrl = requiresLowerCaseUrl;
-    }
+		this.requiresLowerCaseUrl = requiresLowerCaseUrl;
+	}
 }
