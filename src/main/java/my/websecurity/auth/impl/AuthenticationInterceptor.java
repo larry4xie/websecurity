@@ -54,7 +54,7 @@ public class AuthenticationInterceptor extends AbstractAuthenticationInterceptor
 				// 还没有登录或者session失效
 				// 获取没有登录的转发页面
 				String invalidSessionUrl = configuration.getSpecialPages().get(INVALID_SESSION_URL);
-				if(null != invalidSessionUrl && invalidSessionUrl.length() > 0) {
+				if(needRedirect2Page(req) && null != invalidSessionUrl && invalidSessionUrl.length() > 0) {
 					StringBuffer toUrl = new StringBuffer(invalidSessionUrl)
 							.append('?').append(TO_URL).append('=')
 							.append(URLEncoder.encode(context.getFullRequestUrl(), "UTF-8"));
@@ -84,7 +84,7 @@ public class AuthenticationInterceptor extends AbstractAuthenticationInterceptor
 				} else {
 					// 权限验证不通过
 					String accessDeniedPage = configuration.getSpecialPages().get(ACCESS_DENIED_PAGE);
-					if (null != accessDeniedPage && accessDeniedPage.length() > 0) {
+					if (needRedirect2Page(req) && null != accessDeniedPage && accessDeniedPage.length() > 0) {
 						StringBuffer toUrl = new StringBuffer(accessDeniedPage)
 								.append('?').append(TO_URL).append('=')
 								.append(URLEncoder.encode(context.getFullRequestUrl(), "UTF-8"));

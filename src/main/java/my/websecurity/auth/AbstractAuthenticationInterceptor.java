@@ -3,6 +3,8 @@ package my.websecurity.auth;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
+
 import my.websecurity.auth.impl.PrivilegeVoter;
 import my.websecurity.auth.impl.UnanimousAccessDecisionManager;
 import my.websecurity.interceptor.Interceptor;
@@ -27,6 +29,16 @@ public abstract class AbstractAuthenticationInterceptor implements Interceptor {
 	 * 决策管理器
 	 */
 	protected AccessDecisionManager accessDecisionManager;
+	
+	/**
+	 * 是否有必要重定向到页面，还是值send error
+	 * @param request
+	 * @return
+	 */
+	protected boolean needRedirect2Page(HttpServletRequest request) {
+		String requestedWith = request.getHeader("X-Requested-With");
+		return requestedWith != null ? !"XMLHttpRequest".equals(requestedWith) : true;
+	}
 	
 	/**
 	 * 构建默认的决策管理器<br/>
