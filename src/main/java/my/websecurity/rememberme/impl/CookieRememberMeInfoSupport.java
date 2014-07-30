@@ -92,7 +92,7 @@ public abstract class CookieRememberMeInfoSupport implements RememberMeInfo {
 			rememberMeString = rememberMeString.replaceAll("\\s", ""); // 76
 			Cookie cookie = new Cookie(rememberMeKey, rememberMeString);
 			cookie.setMaxAge(maxAge > 0 ? maxAge: RememberMeService.REMEMBERME_MAX_AGE);
-			cookie.setPath(context.getRequest().getContextPath());
+			cookie.setPath(context.getRequest().getContextPath() + '/');
 			context.getResponse().addCookie(cookie);
 		} catch (Exception e) {
 			logger.error("saveRememberMeInfo", e);
