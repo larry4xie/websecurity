@@ -105,7 +105,7 @@ public abstract class CookieRememberMeInfoSupport implements RememberMeInfo {
 		//销毁cookie
 		Cookie cookie= new Cookie(rememberMeKey, null);
 		cookie.setMaxAge(0);
-		cookie.setPath(context.getRequest().getContextPath());
+		cookie.setPath(context.getRequest().getContextPath() + '/');
 		context.getResponse().addCookie(cookie);
 	}
 }
