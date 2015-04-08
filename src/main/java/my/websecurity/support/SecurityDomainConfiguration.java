@@ -76,7 +76,8 @@ public class SecurityDomainConfiguration {
 		super();
 		// extends SecurityApplicaionContext
 		this.userDetailsHelper = securityApplicaionContext.getGlobalUserDetailsHelper();
-		this.specialPages = securityApplicaionContext.getGlobalSpecialPages();
+		// deep copy
+		this.specialPages = new HashMap<String, String>(securityApplicaionContext.getGlobalSpecialPages());
 		this.securityApplicaionContext = securityApplicaionContext;
 	}
 	
@@ -196,7 +197,7 @@ public class SecurityDomainConfiguration {
 		return specialPages != null ? specialPages : new HashMap<String, String>();
 	}
 	
-	public void setSpecialPages(Map<String, String> specialPages) {
+	void setSpecialPages(Map<String, String> specialPages) {
 		this.specialPages = specialPages;
 	}
 
